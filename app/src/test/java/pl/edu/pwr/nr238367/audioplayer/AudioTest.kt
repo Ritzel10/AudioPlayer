@@ -9,9 +9,12 @@ import org.junit.Assert.*
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest {
+class AudioTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun durationToStringIsCorrect() {
+        val audio = Audio("","",120)
+        assertEquals("02:00", audio.durationToString)
+        val audio2 = Audio("","",63)
+        assertEquals("01:03", audio2.durationToString)
     }
 }
