@@ -4,7 +4,7 @@ import java.text.DecimalFormat
 
 const val SECONDS_IN_MINUTE = 60
 
-data class Audio(val title:String, val author:String, val durationSeconds: Long){
+data class Audio(val title: String, val author: String, val durationSeconds: Long, val audioName: String) {
     val durationToString:String
         get() {
             val minutes = durationSeconds / SECONDS_IN_MINUTE

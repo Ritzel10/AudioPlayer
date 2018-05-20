@@ -35,6 +35,7 @@ class AudioAdapter(private val dataSet:List<Audio>, private val context:Context)
         rowView.audioTitle.text = audio.title
         rowView.audioAuthor.text = audio.author
         rowView.audioDuration.text = audio.durationToString
+        rowView.imageButton.setOnClickListener { playAudio(audio) }
     }
 
     /**
@@ -42,6 +43,9 @@ class AudioAdapter(private val dataSet:List<Audio>, private val context:Context)
      *
      * @return The total number of items in this adapter.
      */
+    private fun playAudio(audio: Audio) {
+        (context as MainActivity).playbackManager.startAudio(audio)
+    }
     override fun getItemCount(): Int {
         return dataSet.size
     }
