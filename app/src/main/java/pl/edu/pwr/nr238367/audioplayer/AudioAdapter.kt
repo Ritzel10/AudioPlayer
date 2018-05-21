@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.audio_row.view.*
 
-class AudioAdapter(private val dataSet:List<Audio>, private val context:Context) : RecyclerView.Adapter<AudioAdapter.ViewHolder>() {
+class AudioAdapter(private val dataSet: List<Audio>, private val context: Context, var service: AudioService.ServiceBinder? = null) : RecyclerView.Adapter<AudioAdapter.ViewHolder>() {
     /**
      * Called by RecyclerView to display the data at the specified position. This method should
      * update the contents of the [ViewHolder.itemView] to reflect the item at the given
@@ -44,7 +44,8 @@ class AudioAdapter(private val dataSet:List<Audio>, private val context:Context)
      * @return The total number of items in this adapter.
      */
     private fun playAudio(audio: Audio) {
-        (context as MainActivity).playbackManager.startAudio(audio)
+        service?.playbackManager?.startAudio(audio)
+        (context as MainActivity).updatePlayPauseButton()
     }
     override fun getItemCount(): Int {
         return dataSet.size
