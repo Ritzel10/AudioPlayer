@@ -1,13 +1,13 @@
 package pl.edu.pwr.nr238367.audioplayer
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.MediaController
 import kotlinx.android.synthetic.main.audio_row.view.*
 
-class AudioAdapter(private val dataSet: List<Audio>, private val context: Context, var service: AudioService.ServiceBinder? = null) : RecyclerView.Adapter<AudioAdapter.ViewHolder>() {
+class AudioAdapter(private val dataSet: List<Audio>, private val mediaController: MediaController) : RecyclerView.Adapter<AudioAdapter.ViewHolder>() {
     /**
      * Called by RecyclerView to display the data at the specified position. This method should
      * update the contents of the [ViewHolder.itemView] to reflect the item at the given
@@ -44,8 +44,9 @@ class AudioAdapter(private val dataSet: List<Audio>, private val context: Contex
      * @return The total number of items in this adapter.
      */
     private fun playAudio(audio: Audio) {
-        service?.playbackManager?.startAudio(audio)
-        (context as MainActivity).updatePlayPauseButton()
+//        service?.playbackManager?.startAudio(audio, (context as MainActivity).mainLayout)
+//        (context as MainActivity).updatePlayPauseButton()
+        mediaController
     }
     override fun getItemCount(): Int {
         return dataSet.size

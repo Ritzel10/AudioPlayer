@@ -10,6 +10,7 @@ class PlaybackManager(private val context: Context) {
     var mediaPlayer: MediaPlayer? = null
     var currentlyPlaying: Audio? = null
 
+
     fun startAudio(audio: Audio) {
         mediaPlayer?.let {
             mediaPlayer!!.release()
