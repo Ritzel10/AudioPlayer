@@ -1,10 +1,13 @@
 package pl.edu.pwr.nr238367.audioplayer
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.text.DecimalFormat
 
 const val SECONDS_IN_MINUTE = 60
 
-data class Audio(val title: String, val author: String, val durationSeconds: Long, val audioName: String) {
+@Parcelize
+data class Audio(val title: String, val author: String, val durationSeconds: Int, val audioPath: String = "") : Parcelable {
     val durationToString:String
         get() {
             val minutes = durationSeconds / SECONDS_IN_MINUTE
