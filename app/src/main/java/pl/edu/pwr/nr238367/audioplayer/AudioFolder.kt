@@ -8,7 +8,7 @@ import java.io.File
 
 object AudioFolder {
     var audioList: MutableList<Audio> = mutableListOf()
-    val supportedExtensions = listOf("3gp", "m4a", "aac", "flac", "mp3", "wav", "ogg")
+    private val supportedExtensions = listOf("3gp", "m4a", "aac", "flac", "mp3", "wav", "ogg")
     fun init(path: String, context: Context) {
         audioList.clear()
         try {

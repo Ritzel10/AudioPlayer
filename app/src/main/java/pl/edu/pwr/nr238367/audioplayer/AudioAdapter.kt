@@ -20,6 +20,7 @@ class AudioAdapter(private val dataSet: List<Audio>, private val userInterface: 
     private fun playAudio(position: Int) {
         audioPlayer?.startAudio(position)
         val audio = dataSet[position]
+        userInterface.showControls()
         userInterface.updateAudioTitle(audio.title)
         userInterface.updatePlayPauseButton()
         userInterface.syncSeekBarWithAudio(audio)
@@ -31,8 +32,7 @@ class AudioAdapter(private val dataSet: List<Audio>, private val userInterface: 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view:View = LayoutInflater.from(parent.context).inflate(R.layout.audio_row, parent, false)
-        val holder = ViewHolder(view)
-        return holder
+        return ViewHolder(view)
     }
 
     class ViewHolder(val rowView: View):RecyclerView.ViewHolder(rowView)

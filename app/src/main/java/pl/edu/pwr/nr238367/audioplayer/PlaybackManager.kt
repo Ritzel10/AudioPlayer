@@ -14,10 +14,11 @@ const val DEFAULT_SKIP_AMOUNT = 10000
 const val MILLISECONDS_IN_SECOND = 1000
 
 class PlaybackManager(private val context: Context, private val audioService: AudioForegroundService) {
-    var mediaPlayer: MediaPlayer? = null
+    private var mediaPlayer: MediaPlayer? = null
     var currentlyPlaying: Audio? = null
-    var currentPosition: Int = 0
-    var transitionType: TransitionType = NORMAL
+        private set
+    private var currentPosition: Int = 0
+    private var transitionType: TransitionType = NORMAL
 
     private val onCompletionListener = MediaPlayer.OnCompletionListener {
         nextSong()
@@ -63,11 +64,8 @@ class PlaybackManager(private val context: Context, private val audioService: Au
 
     val isPlaying: Boolean
         get() {
-            return mediaPlayer?.isPlaying ?: false
+            return mediaPlayer?.isPlaying == true
         }
-
-    val isSongCreated: Boolean
-        get() = currentlyPlaying != null
 
     fun skipBackwards() {
         skip(DEFAULT_SKIP_AMOUNT, DIRECTION_BACKWARDS)
@@ -86,7 +84,7 @@ class PlaybackManager(private val context: Context, private val audioService: Au
         mediaPlayer?.seekTo(duration * MILLISECONDS_IN_SECOND)
     }
 
-    fun skip(duration: Int, direction: Int) {
+    private fun skip(duration: Int, direction: Int) {
         mediaPlayer?.seekTo(mediaPlayer!!.currentPosition + direction * duration)
     }
 

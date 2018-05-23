@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.audio_controls.*
 import kotlinx.android.synthetic.main.audio_controls.view.*
@@ -21,7 +22,6 @@ const val INTENT_FILTER_ACTIVITY_COMMUNICATION = "intent_filter"
 class MainActivity : AppCompatActivity(), AudioUserInterface {
 
 
-    //    val audioList = listOf(Audio("Energy", "Bensound", 179, "bensoundenergy"), Audio("All that", "Bensound", 145, "allthat"))
     private lateinit var audioAdapter: AudioAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
         }
 
     }
-    //lateinit var playbackManager: PlaybackManager
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,6 +130,9 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
         audioService?.refreshNotification()
     }
 
+    override fun showControls() {
+        audioControls.visibility = View.VISIBLE
+    }
     private fun updateSeekBar() {
         val currentTime = audioService?.playbackManager?.currentTime
         seekBar.progress = currentTime ?: 0

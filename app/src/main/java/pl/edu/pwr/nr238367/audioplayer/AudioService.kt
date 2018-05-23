@@ -105,7 +105,6 @@ class AudioService : Service(), AudioForegroundService {
 
     inner class ServiceBinder : Binder() {
         val playbackManager: PlaybackManager get() = this@AudioService.playbackManager
-        val audioService: AudioService get() = this@AudioService
         fun refreshNotification() {
             this@AudioService.refreshNotification()
         }

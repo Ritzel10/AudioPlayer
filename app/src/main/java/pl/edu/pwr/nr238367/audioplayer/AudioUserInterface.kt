@@ -5,4 +5,5 @@ interface AudioUserInterface {
     fun updatePlayPauseButton()
     fun updateAudioTitle(title: String)
     fun syncSeekBarWithAudio(audio: Audio)
+    fun showControls()
 }
