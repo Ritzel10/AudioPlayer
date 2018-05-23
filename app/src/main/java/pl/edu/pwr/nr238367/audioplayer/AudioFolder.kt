@@ -14,7 +14,7 @@ object AudioFolder {
         try {
             val directory = File(path)
             for (file in directory.listFiles()) {
-//            Log.i("rozszerzenie",file.extension)
+                //if file is an audio file
                 if (file.extension in supportedExtensions) {
                     val audio = extractMetaDataFromFile(file, context)
                     audio?.let {

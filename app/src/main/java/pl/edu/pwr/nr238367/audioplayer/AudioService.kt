@@ -28,6 +28,8 @@ class AudioService : Service(), AudioForegroundService {
 
 
     lateinit var playbackManager: PlaybackManager
+
+    //broadcast receiver that receives messages from notification buttons
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val message = intent?.getStringExtra(ACTION_NAME)
@@ -48,7 +50,6 @@ class AudioService : Service(), AudioForegroundService {
             }
         }
     }
-
     private fun notifyActivity() {
         val intentForActivity = Intent(INTENT_FILTER_ACTIVITY_COMMUNICATION)
         intentForActivity.putExtra(MESSAGE_NAME, NowPlaying(playbackManager.currentlyPlaying!!))
@@ -62,6 +63,10 @@ class AudioService : Service(), AudioForegroundService {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    override fun onDestroy() {
+        unregisterReceiver(broadcastReceiver)
+        super.onDestroy()
+    }
     private fun createNotification(audio: Audio? = null): Notification {
         val intentPause = Intent(INTENT_FILTER_NOTIFICATION)
         intentPause.putExtra(ACTION_NAME, ACTION_PLAY_PAUSE)
@@ -98,8 +103,6 @@ class AudioService : Service(), AudioForegroundService {
     }
     override fun onBind(intent: Intent): IBinder? {
         playbackManager = PlaybackManager(this, this)
-//        val sendIntent = Intent(INTENT_FILTER_ACTIVITY_COMMUNICATION)
-//        LocalBroadcastManager.getInstance(this).sendBroadcast(sendIntent)
         return ServiceBinder()
     }
 

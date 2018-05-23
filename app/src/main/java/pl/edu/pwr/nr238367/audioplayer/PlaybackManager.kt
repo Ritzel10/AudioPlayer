@@ -15,15 +15,16 @@ const val MILLISECONDS_IN_SECOND = 1000
 
 class PlaybackManager(private val context: Context, private val audioService: AudioForegroundService) {
     private var mediaPlayer: MediaPlayer? = null
+    private var currentPosition: Int = 0
+    var transitionType: TransitionType = NORMAL
     var currentlyPlaying: Audio? = null
         private set
-    private var currentPosition: Int = 0
-    private var transitionType: TransitionType = NORMAL
 
     private val onCompletionListener = MediaPlayer.OnCompletionListener {
         nextSong()
     }
 
+    //plays next song, behavior depends on transitionType
     fun nextSong() {
         val intent = Intent(INTENT_FILTER_ACTIVITY_COMMUNICATION)
         when (transitionType) {

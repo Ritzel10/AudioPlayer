@@ -10,10 +10,13 @@ import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.audio_controls.*
 import kotlinx.android.synthetic.main.audio_controls.view.*
+import org.jetbrains.anko.startActivity
 
 const val CHECK_DELAY: Long = 100
 const val MESSAGE_NAME = "MESSAGE"
@@ -26,11 +29,13 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var serviceConnection: AudioServiceConnection
-    private var audioService: AudioService.ServiceBinder? = null
+    private var audioServiceBinder: AudioService.ServiceBinder? = null
     private var serviceBound = false
     private lateinit var handler: Handler
     private lateinit var seekBarListener: SeekBarAudioControlListener
     private var currentFolder: String = "Music"
+
+    //broadcast receiver that receives messages from the service
     private val messageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val message = intent?.extras?.getParcelable<Message>(MESSAGE_NAME)
@@ -49,8 +54,11 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         setSupportActionBar(toolbar)
+        //initialize audio files from folder
         AudioFolder.init("${Environment.getExternalStorageDirectory()}/$currentFolder", this)
+
         viewManager = LinearLayoutManager(this)
         audioAdapter = AudioAdapter(AudioFolder.audioList, this)
         recyclerView = audioRecyclerView.apply {
@@ -58,14 +66,15 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
             layoutManager = viewManager
             adapter = audioAdapter
         }
+        //add logic to audio control buttons
         playPause.setOnClickListener {
             playPauseOnClick()
         }
         skipBackwards.setOnClickListener {
-            audioService?.playbackManager?.skipBackwards()
+            audioServiceBinder?.playbackManager?.skipBackwards()
         }
         skipForwards.setOnClickListener {
-            audioService?.playbackManager?.skipForwards()
+            audioServiceBinder?.playbackManager?.skipForwards()
         }
         seekBarListener = SeekBarAudioControlListener()
         seekBar.setOnSeekBarChangeListener(seekBarListener)
@@ -75,8 +84,10 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
 
     override fun onResume() {
         super.onResume()
+        //get current audio status from service
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, IntentFilter(INTENT_FILTER_ACTIVITY_COMMUNICATION))
         handler = Handler()
+        //show current audio time
         handler.postDelayed(object : Runnable {
             override fun run() {
                 updateSeekBar()
@@ -95,6 +106,27 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
         unBindFromService()
         super.onStop()
     }
+
+    //inflate toolbar menu
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+        //show settings
+            R.id.action_settings -> {
+                startActivity<SettingsActivity>()
+                true
+            }
+            else ->
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                super.onOptionsItemSelected(item)
+        }
+    }
+
 
     private fun startService() {
         val intent = Intent(this, AudioService::class.java)
@@ -120,25 +152,29 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
         super.onPause()
     }
 
+    //resume or stop the audio depending on state
     private fun playPauseOnClick() {
-        if (audioService?.playbackManager?.isPlaying == true) {
-            audioService?.playbackManager?.pause()
+        if (audioServiceBinder?.playbackManager?.isPlaying == true) {
+            audioServiceBinder?.playbackManager?.pause()
         } else {
-            audioService?.playbackManager?.resume()
+            audioServiceBinder?.playbackManager?.resume()
         }
         updatePlayPauseButton()
-        audioService?.refreshNotification()
+        audioServiceBinder?.refreshNotification()
     }
+
 
     override fun showControls() {
         audioControls.visibility = View.VISIBLE
     }
+
     private fun updateSeekBar() {
-        val currentTime = audioService?.playbackManager?.currentTime
+        val currentTime = audioServiceBinder?.playbackManager?.currentTime
         seekBar.progress = currentTime ?: 0
 //        Log.i("SEEKBAR", currentTime.toString())
     }
 
+    //update info about current audio (title, current time)
     private fun updateCurrentAudio(audio: Audio) {
         updateAudioTitle(audio.title)
         syncSeekBarWithAudio(audio)
@@ -146,8 +182,9 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
         updatePlayPauseButton()
     }
 
+    //display play or pause icon depending on audio state
     override fun updatePlayPauseButton() {
-        if (audioService?.playbackManager?.isPlaying == true) {
+        if (audioServiceBinder?.playbackManager?.isPlaying == true) {
             playPause.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_pause_black_24dp))
         } else {
             playPause.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_play_arrow_black_24dp))
@@ -170,9 +207,9 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
         }
 
         override fun onServiceConnected(className: ComponentName?, binder: IBinder?) {
-            audioService = binder as AudioService.ServiceBinder
-            audioAdapter.audioPlayer = audioService?.playbackManager
-            seekBarListener.playbackManager = audioService?.playbackManager
+            audioServiceBinder = binder as AudioService.ServiceBinder
+            audioAdapter.audioPlayer = audioServiceBinder?.playbackManager
+            seekBarListener.playbackManager = audioServiceBinder?.playbackManager
             serviceBound = true
             val audio = binder.playbackManager.currentlyPlaying
             audio?.let {

@@ -4,5 +4,5 @@ import android.media.MediaPlayer
 
 
 fun MediaPlayer.currentPositionInSeconds(): Int {
-    return this.currentPosition / 1000
+    return this.currentPosition / MILLISECONDS_IN_SECOND
 }
