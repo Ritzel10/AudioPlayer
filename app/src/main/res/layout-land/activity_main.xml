@@ -34,12 +34,12 @@
         layout="@layout/audio_controls"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/audioRecyclerView"
-        app:layout_constraintVertical_weight="1.2" />
+        app:layout_constraintVertical_weight="1" />
 
 </android.support.constraint.ConstraintLayout>

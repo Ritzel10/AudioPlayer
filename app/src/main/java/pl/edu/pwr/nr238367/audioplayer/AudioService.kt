@@ -20,6 +20,7 @@ const val NOTIFICATION_CHANNEL = "notification_audio"
 const val PAUSE_REQUEST_CODE = 0
 const val NEXT_REQUEST_CODE = 1
 const val RESTART_REQUEST_CODE = 2
+const val ACTIVITY_REQUEST_CODE = 3
 const val ACTION_NAME = "action"
 const val ACTION_PLAY_PAUSE = "play_pause"
 const val ACTION_NEXT = "next"
@@ -80,6 +81,8 @@ class AudioService : Service(), AudioForegroundService {
         intentNext.putExtra(ACTION_NAME, ACTION_NEXT)
         val intentRestart = Intent(INTENT_FILTER_SERVICE_COMMUNICATION)
         intentRestart.putExtra(ACTION_NAME, ACTION_RESTART)
+        val intentActivity = Intent(this, MainActivity::class.java)
+        val openActivityIntent = PendingIntent.getActivity(this, ACTIVITY_REQUEST_CODE, intentActivity, PendingIntent.FLAG_ONE_SHOT)
         val pausePendingIntent = PendingIntent.getBroadcast(this, PAUSE_REQUEST_CODE, intentPause, PendingIntent.FLAG_UPDATE_CURRENT)
         val nextPendingIntent = PendingIntent.getBroadcast(this, NEXT_REQUEST_CODE, intentNext, PendingIntent.FLAG_UPDATE_CURRENT)
         val restartPendingIntent = PendingIntent.getBroadcast(this, RESTART_REQUEST_CODE, intentRestart, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -89,7 +92,8 @@ class AudioService : Service(), AudioForegroundService {
                 .setContentTitle(audio?.title ?: getString(R.string.app_name))
                 .setContentText(audio?.author ?: "")
                 .setPriority(NotificationCompat.PRIORITY_MAX)
-        if (this::playbackManager.isInitialized) {
+                .setContentIntent(openActivityIntent)
+        if (this::playbackManager.isInitialized && playbackManager.isStarted) {
             builder.addAction(R.drawable.ic_skip_previous_black_24dp, getString(R.string.notification_restart), restartPendingIntent)
             if (playbackManager.isPlaying) {
                 builder.addAction(R.drawable.ic_pause_black_24dp, getString(R.string.notification_pause), pausePendingIntent)

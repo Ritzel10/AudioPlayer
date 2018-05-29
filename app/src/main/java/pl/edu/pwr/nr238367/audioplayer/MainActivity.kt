@@ -132,6 +132,10 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
                 startActivity<SettingsActivity>()
                 true
             }
+            R.id.action_about -> {
+                startActivity<AboutActivity>()
+                true
+            }
             else ->
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -228,8 +232,8 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
             }
             if (audioServiceBinder?.playbackManager?.isStarted == true) {
                 showControls()
+                audioServiceBinder?.refreshNotification()
             }
         }
-
     }
 }

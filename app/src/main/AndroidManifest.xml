@@ -23,7 +23,12 @@
             android:name=".AudioService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" />
 
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity
+            android:name=".AboutActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_about"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>
