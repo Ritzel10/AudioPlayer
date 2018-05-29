@@ -8,8 +8,9 @@ import android.os.Bundle
 import android.os.IBinder
 import android.preference.ListPreference
 import android.preference.Preference
-import android.preference.PreferenceActivity
 import android.preference.PreferenceFragment
+import android.support.v7.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_settings.*
 import org.jetbrains.anko.defaultSharedPreferences
 
 
@@ -17,7 +18,7 @@ const val FRAGMENT_NAME = "settings_fragment"
 const val DEFAULT_TRANSITION_SPINNER_POSITION = 1
 const val FOLDER_RESULT_ID = 200
 
-class SettingsActivity : PreferenceActivity() {
+class SettingsActivity : AppCompatActivity() {
 
 
     var audioServiceBinder: AudioService.ServiceBinder? = null
@@ -26,7 +27,15 @@ class SettingsActivity : PreferenceActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fragmentManager.beginTransaction().replace(android.R.id.content, SettingsFragment(), FRAGMENT_NAME).commit()
+        setContentView(R.layout.activity_settings)
+        setSupportActionBar(toolbar)
+        //display back button and disable title
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.setNavigationOnClickListener { finish() }
+        fragmentManager.beginTransaction().replace(R.id.container, SettingsFragment(), FRAGMENT_NAME).commit()
+
     }
 
     override fun onStart() {

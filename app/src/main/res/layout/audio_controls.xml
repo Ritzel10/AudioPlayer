@@ -2,7 +2,11 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="8dp"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:background="@drawable/line">
 
     <TextView
         android:id="@+id/audioTitle"
@@ -12,10 +16,14 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/audio_title_placeholder"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1" />
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -23,11 +31,14 @@
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:splitTrack="false"
+        android:thumbTint="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/playPause"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/audioTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/audioTitle"
+        app:layout_constraintVertical_weight="1" />
 
     <ImageButton
         android:id="@+id/skipBackwards"
@@ -35,13 +46,16 @@
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
+        android:background="@null"
         android:contentDescription="@string/backwards_button_description"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/playPause"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seekBar"
-        app:srcCompat="@drawable/ic_fast_rewind_black_24dp" />
+        app:layout_constraintVertical_weight="1.5"
+        app:srcCompat="@drawable/ic_rewind" />
 
     <ImageButton
         android:id="@+id/skipForwards"
@@ -49,25 +63,31 @@
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:background="@null"
         android:contentDescription="@string/forward_button_description"
+        android:scaleType="fitCenter"
         android:scaleX="-1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/playPause"
         app:layout_constraintTop_toBottomOf="@+id/seekBar"
-        app:srcCompat="@drawable/ic_fast_rewind_black_24dp" />
+        app:layout_constraintVertical_weight="1.5"
+        app:srcCompat="@drawable/ic_rewind" />
 
     <ImageButton
         android:id="@+id/playPause"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
+        android:background="@null"
         android:contentDescription="@string/play_button_description"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/skipForwards"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/skipBackwards"
         app:layout_constraintTop_toBottomOf="@+id/seekBar"
-        app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
+        app:layout_constraintVertical_weight="1.5"
+        app:srcCompat="@drawable/ic_play" />
 </android.support.constraint.ConstraintLayout>

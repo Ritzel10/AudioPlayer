@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
     private var serviceBound = false
     private lateinit var handler: Handler
     private lateinit var seekBarListener: SeekBarAudioControlListener
-    private var currentFolder: String = ""
 
     //broadcast receiver that receives messages from the service
     private val messageReceiver = object : BroadcastReceiver() {
@@ -81,8 +80,9 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
         }
         seekBarListener = SeekBarAudioControlListener()
         seekBar.setOnSeekBarChangeListener(seekBarListener)
-
         startService()
+
+
     }
 
     private fun loadFolder() {
@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
     override fun onStart() {
         super.onStart()
         bindToService()
+
     }
 
     override fun onStop() {
@@ -195,9 +196,9 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
     //display play or pause icon depending on audio state
     override fun updatePlayPauseButton() {
         if (audioServiceBinder?.playbackManager?.isPlaying == true) {
-            playPause.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_pause_black_24dp))
+            playPause.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_pause))
         } else {
-            playPause.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_play_arrow_black_24dp))
+            playPause.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_play))
         }
     }
 
@@ -224,6 +225,9 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
             val audio = binder.playbackManager.currentlyPlaying
             audio?.let {
                 updateCurrentAudio(audio)
+            }
+            if (audioServiceBinder?.playbackManager?.isStarted == true) {
+                showControls()
             }
         }
 

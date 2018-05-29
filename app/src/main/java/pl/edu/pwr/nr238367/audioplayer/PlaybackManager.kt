@@ -28,16 +28,20 @@ class PlaybackManager(private val context: Context, private val audioService: Au
     fun nextSong() {
         val intent = Intent(INTENT_FILTER_ACTIVITY_COMMUNICATION)
         if (AudioFolder.audioList.isNotEmpty()) {
-            val position = when (transitionType) {
+            var position = 0
+            when (transitionType) {
                 REPEAT -> {
-                    currentPosition
+                    position = currentPosition
                 }
                 NORMAL -> {
-                    (currentPosition + 1) % AudioFolder.audioList.size
+                    position = (currentPosition + 1) % AudioFolder.audioList.size
                 }
                 RANDOM -> {
-                    Random().nextInt(AudioFolder.audioList.size)
-
+                    var random: Int
+                    do {
+                        random = Random().nextInt(AudioFolder.audioList.size)
+                    } while (random == currentPosition)
+                    position = random
                 }
             }
             startAudio(position)
@@ -63,6 +67,8 @@ class PlaybackManager(private val context: Context, private val audioService: Au
         audioService.updateNotification(audio)
     }
 
+    val isStarted: Boolean
+        get() = mediaPlayer != null
     val isPlaying: Boolean
         get() {
             return mediaPlayer?.isPlaying == true
