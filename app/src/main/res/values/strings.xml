@@ -11,6 +11,13 @@
     <string name="notification_play">Play</string>
     <string name="notification_pause">Pause</string>
     <string name="notification_next">Next</string>
+    <string name="notification_restart">Restart</string>
     <string name="settings_title">Settings</string>
     <string name="transition_label">Transition type</string>
+    <string name="folder_label">Audio source</string>
+    <string name="folder_choose_message">Pick an audio folder</string>
+
+    <!-- Preference keys-->
+    <string name="transition_key">pref_transitionType</string>
+    <string name="folder_key">pref_folderSource</string>
 </resources>

@@ -3,13 +3,14 @@ package pl.edu.pwr.nr238367.audioplayer
 
 import android.content.Context
 import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.util.Log
 import java.io.File
 
 object AudioFolder {
     var audioList: MutableList<Audio> = mutableListOf()
     private val supportedExtensions = listOf("3gp", "m4a", "aac", "flac", "mp3", "wav", "ogg")
-    fun init(path: String, context: Context) {
+    fun initDocumentFile(path: String, context: Context) {
         audioList.clear()
         try {
             val directory = File(path)
@@ -22,9 +23,13 @@ object AudioFolder {
                     }
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.d("file", e.toString())
         }
+    }
+
+    fun initDocumentFile(uri: Uri, context: Context) {
+        initDocumentFile(uri.convertDocumentPath(), context)
     }
 
     private fun extractMetaDataFromFile(file: File, context: Context): Audio? {

@@ -27,26 +27,26 @@ class PlaybackManager(private val context: Context, private val audioService: Au
     //plays next song, behavior depends on transitionType
     fun nextSong() {
         val intent = Intent(INTENT_FILTER_ACTIVITY_COMMUNICATION)
-        when (transitionType) {
-            NO_TRANSITION -> {
-                intent.putExtra(MESSAGE_NAME, AudioFinished(currentlyPlaying!!))
+        if (AudioFolder.audioList.isNotEmpty()) {
+            val position = when (transitionType) {
+                REPEAT -> {
+                    currentPosition
+                }
+                NORMAL -> {
+                    (currentPosition + 1) % AudioFolder.audioList.size
+                }
+                RANDOM -> {
+                    Random().nextInt(AudioFolder.audioList.size)
+
+                }
             }
-            NORMAL -> {
-                val position = (currentPosition + 1) % AudioFolder.audioList.size
-                startAudio(position)
-                currentPosition = position
-                currentlyPlaying = AudioFolder.audioList[position]
-                intent.putExtra(MESSAGE_NAME, NowPlaying(currentlyPlaying!!))
-            }
-            RANDOM -> {
-                val position = Random().nextInt(AudioFolder.audioList.size)
-                startAudio(position)
-                currentPosition = position
-                currentlyPlaying = AudioFolder.audioList[position]
-                intent.putExtra(MESSAGE_NAME, NowPlaying(currentlyPlaying!!))
-            }
+            startAudio(position)
+            currentPosition = position
+            currentlyPlaying = AudioFolder.audioList[position]
+            intent.putExtra(MESSAGE_NAME, NowPlaying(currentlyPlaying!!))
+            //send information to activity
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
         }
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
     fun startAudio(position: Int) {

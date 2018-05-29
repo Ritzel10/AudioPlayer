@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.IBinder
+import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
@@ -25,6 +26,7 @@ const val INTENT_FILTER_ACTIVITY_COMMUNICATION = "intent_filter"
 class MainActivity : AppCompatActivity(), AudioUserInterface {
 
 
+
     private lateinit var audioAdapter: AudioAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
     private var serviceBound = false
     private lateinit var handler: Handler
     private lateinit var seekBarListener: SeekBarAudioControlListener
-    private var currentFolder: String = "Music"
+    private var currentFolder: String = ""
 
     //broadcast receiver that receives messages from the service
     private val messageReceiver = object : BroadcastReceiver() {
@@ -56,8 +58,9 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
+        loadFolder()
         //initialize audio files from folder
-        AudioFolder.init("${Environment.getExternalStorageDirectory()}/$currentFolder", this)
+//        AudioFolder.initDocumentFile("${Environment.getExternalStorageDirectory()}/$currentFolder", this)
 
         viewManager = LinearLayoutManager(this)
         audioAdapter = AudioAdapter(AudioFolder.audioList, this)
@@ -82,6 +85,13 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
         startService()
     }
 
+    private fun loadFolder() {
+        //load folder from shared preferences
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        //default path is the root folder
+        val path = sharedPreferences.getString(getString(R.string.folder_key), Environment.getExternalStorageDirectory().absolutePath)
+        AudioFolder.initDocumentFile(path, this)
+    }
     override fun onResume() {
         super.onResume()
         //get current audio status from service
@@ -95,6 +105,7 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
             }
 
         }, CHECK_DELAY)
+        audioAdapter.notifyDataSetChanged()
     }
 
     override fun onStart() {
@@ -126,7 +137,6 @@ class MainActivity : AppCompatActivity(), AudioUserInterface {
                 super.onOptionsItemSelected(item)
         }
     }
-
 
     private fun startService() {
         val intent = Intent(this, AudioService::class.java)
