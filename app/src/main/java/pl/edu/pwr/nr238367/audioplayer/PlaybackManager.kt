@@ -82,7 +82,6 @@ class PlaybackManager(private val context: Context, private val audioService: Au
         get() {
             return mediaPlayer?.currentPositionInSeconds() ?: 0
         }
-
     fun skipForwards() {
         skip(DEFAULT_SKIP_AMOUNT, DIRECTION_FORWARDS)
     }
